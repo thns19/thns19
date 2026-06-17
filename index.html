@@ -1,143 +1,534 @@
 <!DOCTYPE html>
-<html lang="en">
-<!-- Google Analytics (blocked until consent) -->
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XNNGKMS578"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-XNNGKMS578');
-</script>
-<script>
-
-  function loadAnalytics() {
-    var script1 = document.createElement("script");
-    script1.async = true;
-    script1.src = "https://www.googletagmanager.com/gtag/js?id=G-XNNGKMS578";
-    document.head.appendChild(script1);
-
-    script1.onload = function () {
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      window.gtag = gtag;
-
-      gtag('js', new Date());
-      gtag('config', 'G-XXXXXXX');
-    };
-  }
-</script>
+<html>
 <head>
-<!-- Cookie Banner -->
-<div id="cookie-banner" style="
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  background: #222;
-  color: white;
-  padding: 15px;
-  text-align: center;
-  font-family: Arial;
-  z-index: 1000;
-">
-  This site uses cookies for analytics.
-  <button onclick="acceptCookies()" style="margin-left:10px;">Accept</button>
-  <button onclick="rejectCookies()" style="margin-left:5px;">Reject</button>
-</div>
-
-<script>
-  function acceptCookies() {
-    localStorage.setItem("cookieConsent", "accepted");
-    document.getElementById("cookie-banner").style.display = "none";
-    loadAnalytics();
-  }
-
-  function rejectCookies() {
-    localStorage.setItem("cookieConsent", "rejected");
-    document.getElementById("cookie-banner").style.display = "none";
-  }
-
-  window.onload = function () {
-    const consent = localStorage.getItem("cookieConsent");
-
-    if (consent === "accepted") {
-      document.getElementById("cookie-banner").style.display = "none";
-      loadAnalytics();
-    } else if (consent === "rejected") {
-      document.getElementById("cookie-banner").style.display = "none";
-    }
-  };
-</script>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pitchball Super League</title>
+<title>World Cup Predictor</title>
+
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: system-ui, sans-serif;
-  background: #111;
-  color: #f0f0f0;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem 1rem;
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
 }
-.logo { font-size: 48px; font-weight: 500; letter-spacing: -2px; margin-bottom: 4px; }
-.logo span { color: #4caf7d; }
-.tagline { font-size: 13px; color: #555; margin-bottom: 3rem; text-align: center; }
-.seasons { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 420px; }
-.season-row {
-  display: flex; align-items: center; justify-content: space-between;
-  background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px;
-  padding: 1rem 1.25rem; text-decoration: none; color: inherit; transition: border-color 0.15s, transform 0.1s;
+
+body{
+    font-family:Inter,Segoe UI,sans-serif;
+    background:
+        radial-gradient(circle at top left,#1f4cff 0%,transparent 35%),
+        radial-gradient(circle at top right,#8a2be2 0%,transparent 35%),
+        #08111f;
+    color:#fff;
+    min-height:100vh;
+    padding:30px;
 }
-.season-row:hover { border-color: #4caf7d; transform: translateX(4px); }
-.season-row.current { border-color: #4caf7d; }
-.season-row.current .season-num { color: #4caf7d; }
-.season-num { font-size: 18px; font-weight: 500; }
-.season-meta { font-size: 12px; color: #555; margin-top: 2px; }
-.season-badge-pill { font-size: 10px; padding: 3px 8px; border-radius: 20px; font-weight: 500; }
-.pill-live { background: #1a3d2a; color: #4caf7d; }
-.pill-done { background: #1a1a1a; color: #555; border: 1px solid #2a2a2a; }
-.footer { margin-top: 3rem; font-size: 12px; color: #333; }
+
+h1{
+    text-align:center;
+    font-size:3rem;
+    margin-bottom:15px;
+    font-weight:800;
+    letter-spacing:-1px;
+}
+
+h2{
+    margin:40px 0 20px;
+    text-align:center;
+}
+
+h3{
+    margin-bottom:15px;
+    text-align:center;
+    font-size:1.15rem;
+}
+
+#champion{
+    text-align:center;
+    font-size:2rem;
+    font-weight:800;
+    margin:20px auto 40px;
+    color:#ffd700;
+}
+
+.groups{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:20px;
+    margin-bottom:50px;
+}
+
+.group{
+    background:rgba(255,255,255,.06);
+    backdrop-filter:blur(15px);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:18px;
+    padding:18px;
+    box-shadow:
+        0 8px 25px rgba(0,0,0,.25);
+}
+
+.team{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:12px;
+    margin-bottom:8px;
+    background:rgba(255,255,255,.05);
+    border-radius:10px;
+    transition:.2s;
+}
+
+.team:hover{
+    transform:translateY(-2px);
+    background:rgba(255,255,255,.1);
+}
+
+.team span:first-child{
+    font-weight:600;
+}
+
+.team-controls{
+    display:flex;
+    gap:4px;
+}
+
+.team-controls button{
+    width:32px;
+    height:32px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    background:#1d4ed8;
+    color:white;
+    font-weight:bold;
+    transition:.2s;
+}
+
+.team-controls button:hover{
+    background:#2563eb;
+    transform:scale(1.05);
+}
+
+.bracket{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+    align-items:start;
+}
+
+.round{
+    background:rgba(255,255,255,.06);
+    backdrop-filter:blur(15px);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:18px;
+    padding:20px;
+    min-height:400px;
+}
+
+.round h3{
+    margin-bottom:20px;
+    font-size:1.2rem;
+}
+
+.match{
+    background:rgba(255,255,255,.05);
+    border-radius:12px;
+    overflow:hidden;
+    margin-bottom:18px;
+    border:1px solid rgba(255,255,255,.05);
+}
+
+.match div{
+    padding:12px 14px;
+    cursor:pointer;
+    transition:.2s;
+    border-bottom:1px solid rgba(255,255,255,.05);
+}
+
+.match div:last-child{
+    border-bottom:none;
+}
+
+.match div:hover{
+    background:rgba(255,255,255,.12);
+}
+
+.selected{
+    background:linear-gradient(
+        90deg,
+        #2563eb,
+        #4f46e5
+    ) !important;
+    font-weight:700;
+}
+
+.selected:hover{
+    background:linear-gradient(
+        90deg,
+        #2563eb,
+        #4f46e5
+    ) !important;
+}
+
+.round:nth-child(1){
+    border-top:3px solid #3b82f6;
+}
+
+.round:nth-child(2){
+    border-top:3px solid #8b5cf6;
+}
+
+.round:nth-child(3){
+    border-top:3px solid #ec4899;
+}
+
+.round:nth-child(4){
+    border-top:3px solid #f59e0b;
+}
+
+@media (max-width:1200px){
+
+    .bracket{
+        grid-template-columns:1fr 1fr;
+    }
+
+}
+
+@media (max-width:700px){
+
+    body{
+        padding:15px;
+    }
+
+    h1{
+        font-size:2rem;
+    }
+
+    .groups{
+        grid-template-columns:1fr;
+    }
+
+    .bracket{
+        grid-template-columns:1fr;
+    }
+
+}
 </style>
 </head>
 <body>
-  <div class="logo">Pitch<span>ball</span></div>
-  <p class="tagline">Super League — All Seasons</p>
-  <div class="seasons">
-    <a href="players/index.html" class="season-row" style="border-color:#f5c842;">
-      <div><div class="season-num" style="color:#f5c842;">Players</div><div class="season-meta">Every player in Pitchball history</div></div>
-      <span class="season-badge-pill" style="background:#3d3010;color:#f5c842;">Encyclopedia</span>
-    </a>
-    <a href="psl5/index.html" class="season-row current">
-      <div><div class="season-num">PSL5</div><div class="season-meta">The fifth and ongoing season of PSL, consisting of 18 teams.</div></div>
-      <span class="season-badge-pill pill-live">LIVE</span>
-    </a>
-    <a href="psl4/hub.html" class="season-row">
-      <div><div class="season-num">PSL4</div><div class="season-meta">The fourth PSL Season, consisting of 18 teams.</div></div>
-      <span class="season-badge-pill pill-done">Completed</span>
-    </a>
-    <a href="psl3/hub.html" class="season-row">
-      <div><div class="season-num">PSL3</div><div class="season-meta">The third PSL Season, consisting of 14 teams. Also the first instance of the PSL Cup.</div></div>
-      <span class="season-badge-pill pill-done">Completed</span>
-    </a>
-    <a href="psl2/hub.html" class="season-row">
-      <div><div class="season-num">PSL2</div><div class="season-meta">The second PSL Season, consisting of 16 teams.</div></div>
-      <span class="season-badge-pill pill-done">Completed</span>
-    </a>
-    <a href="psl1/hub.html" class="season-row">
-      <div><div class="season-num">PSL1</div><div class="season-meta">The first PSL Season, consisting of 8 teams.</div></div>
-      <span class="season-badge-pill pill-done">Completed</span>
-    </a>
-  </div>
-  
-    <div class="nav">
-    <a href="changelog.html" class="back">Changelog</a>
-  </div>
-  <p class="footer">Created by Thanos · Pitchball © 2026</p>
+
+<h1>World Cup Predictor</h1>
+
+<div id="champion"></div>
+
+<div class="groups" id="groups"></div>
+
+<h2>Knockout Stage</h2>
+
+<div class="bracket">
+
+<div class="round">
+<h3>Round of 16</h3>
+<div id="r16"></div>
+</div>
+
+<div class="round">
+<h3>Quarter Finals</h3>
+<div id="qf"></div>
+</div>
+
+<div class="round">
+<h3>Semi Finals</h3>
+<div id="sf"></div>
+</div>
+
+<div class="round">
+<h3>Final</h3>
+<div id="final"></div>
+</div>
+
+</div>
+
+<script>
+
+const defaultGroups = {
+
+A:[
+"Denmark",
+"Serbia",
+"Netherlands",
+"Kazakhstan"
+],
+
+B:[
+"Norway",
+"Czech Republic",
+"France",
+"Argentina"
+],
+
+C:[
+"England",
+"Romania",
+"Ireland",
+"India"
+],
+
+D:[
+"Finland",
+"Slovakia",
+"Greece",
+"Brazil"
+],
+
+E:[
+"Italy",
+"Hungary",
+"Spain",
+"Australia"
+],
+
+F:[
+"Turkey",
+"Poland",
+"Germany",
+"Canada"
+],
+
+G:[
+"Scotland",
+"Lithuania",
+"Sweden",
+"USA"
+],
+
+H:[
+"Portugal",
+"Belgium",
+"Croatia",
+"Japan"
+]
+
+};
+
+let groups =
+JSON.parse(localStorage.getItem("groups")) ||
+structuredClone(defaultGroups);
+
+let winners =
+JSON.parse(localStorage.getItem("winners")) || {};
+
+function save(){
+    localStorage.setItem("groups",JSON.stringify(groups));
+    localStorage.setItem("winners",JSON.stringify(winners));
+}
+
+function move(group,index,direction){
+
+    const arr=groups[group];
+
+    const newIndex=index+direction;
+
+    if(newIndex<0 || newIndex>=arr.length) return;
+
+    [arr[index],arr[newIndex]]=
+    [arr[newIndex],arr[index]];
+
+    save();
+    render();
+}
+
+function renderGroups(){
+
+    const container=
+    document.getElementById("groups");
+
+    container.innerHTML="";
+
+    Object.entries(groups).forEach(([letter,teams])=>{
+
+        const div=document.createElement("div");
+        div.className="group";
+
+        let html=`<h3>Group ${letter}</h3>`;
+
+        teams.forEach((team,index)=>{
+
+            html+=`
+            <div class="team">
+                <span>${index+1}. ${team}</span>
+                <span class="team-controls">
+                    <button onclick="move('${letter}',${index},-1)">↑</button>
+                    <button onclick="move('${letter}',${index},1)">↓</button>
+                </span>
+            </div>
+            `;
+        });
+
+        div.innerHTML=html;
+        container.appendChild(div);
+
+    });
+
+}
+
+function qualifiers(){
+
+    const q={};
+
+    for(const g in groups){
+
+        q[g+"1"]=groups[g][0];
+        q[g+"2"]=groups[g][1];
+
+    }
+
+    return q;
+}
+
+function buildBracket(){
+
+    const q=qualifiers();
+
+    return {
+
+        r16:{
+            M1:[q.G1,q.H2],
+            M2:[q.A1,q.F2],
+            M3:[q.F1,q.C2],
+            M4:[q.H1,q.A2],
+
+            M5:[q.D1,q.G2],
+            M6:[q.B1,q.E2],
+            M7:[q.E1,q.B2],
+            M8:[q.C1,q.D2]
+        }
+
+    };
+
+}
+
+function winnerMatch(id,teams,round,next){
+
+    const saved=winners[id];
+
+    return `
+    <div class="match">
+
+        <div
+        class="${saved===teams[0]?'selected':''}"
+        onclick="pickWinner('${id}','${teams[0]}')">
+        ${teams[0] || '-'}
+        </div>
+
+        <div
+        class="${saved===teams[1]?'selected':''}"
+        onclick="pickWinner('${id}','${teams[1]}')">
+        ${teams[1] || '-'}
+        </div>
+
+    </div>
+    `;
+}
+
+function pickWinner(matchId,team){
+
+    if(!team) return;
+
+    winners[matchId]=team;
+
+    save();
+    render();
+
+}
+
+function render(){
+
+    renderGroups();
+
+    const bracket=buildBracket();
+
+    const r16Div=document.getElementById("r16");
+
+    let r16html="";
+
+    Object.entries(bracket.r16)
+    .forEach(([id,teams])=>{
+
+        r16html+=winnerMatch(id,teams);
+
+    });
+
+    r16Div.innerHTML=r16html;
+
+    const qfMatches={
+
+        QF1:[winners.M1,winners.M2],
+        QF2:[winners.M3,winners.M4],
+        QF3:[winners.M5,winners.M6],
+        QF4:[winners.M7,winners.M8]
+
+    };
+
+    let qfhtml="";
+
+    Object.entries(qfMatches)
+    .forEach(([id,teams])=>{
+
+        qfhtml+=winnerMatch(id,teams);
+
+    });
+
+    document.getElementById("qf")
+    .innerHTML=qfhtml;
+
+    const sfMatches={
+
+        SF1:[winners.QF1,winners.QF2],
+        SF2:[winners.QF3,winners.QF4]
+
+    };
+
+    let sfhtml="";
+
+    Object.entries(sfMatches)
+    .forEach(([id,teams])=>{
+
+        sfhtml+=winnerMatch(id,teams);
+
+    });
+
+    document.getElementById("sf")
+    .innerHTML=sfhtml;
+
+    const finalMatch={
+
+        F:[winners.SF1,winners.SF2]
+
+    };
+
+    let finalHtml="";
+
+    Object.entries(finalMatch)
+    .forEach(([id,teams])=>{
+
+        finalHtml+=winnerMatch(id,teams);
+
+    });
+
+    document.getElementById("final")
+    .innerHTML=finalHtml;
+
+    document.getElementById("champion")
+    .innerHTML=
+    winners.F
+    ? `🏆 Champion: ${winners.F}`
+    : "";
+
+}
+
+render();
+
+</script>
+
 </body>
 </html>
